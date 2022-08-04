@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Bibliotheque/.idea/Bibliotheque.iml" filepath="$PROJECT_DIR$/../Bibliotheque/.idea/Bibliotheque.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/E_commerce/.idea/CakeProject.iml" filepath="$USER_HOME$/Documents/E_commerce/.idea/CakeProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/HomeWorkSubmission.iml" filepath="$PROJECT_DIR$/.idea/HomeWorkSubmission.iml" />
+    </modules>
+  </component>
+</project>

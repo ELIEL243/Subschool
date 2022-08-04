@@ -1,0 +1,33 @@
+.det-item{
+    background-color: #1C2333;color: #B0B3B9
+}
+
+.list-group{
+    background-color: #1C2333;color: #B0B3B9
+
+}
+
+.det-div{
+    background-color: #1C2333;color: #B0B3B9
+}
+
+@media only screen and (max-width: 768px) {
+  #qr-not{
+      width: 5vh;
+  }
+  .brand-site{
+      margin-left:-100px;
+  }
+  #auth-div{
+      display: flex;
+      flex-direction: column;
+  }
+  .username{
+
+  }
+
+  .auth-btn{
+
+  }
+
+}

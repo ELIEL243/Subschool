@@ -1,0 +1,82 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+{% block content %}
+    <h1 class="text-center mt-3" style="color: #6B97FA">Question de {{ question.student.name }}</h1>
+    <hr>
+    <div class="row col-md-9 mt-3">
+    <h5 class="text-center text-light" style="color: #6B97FA">{{ question.question }}</h5>
+    <hr>
+    <form class="d-flex" method="post">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <input class="form-control" name="response" id="res" placeholder="saisir votre réponse..." style="" required />
+            <input type="hidden" name="question" value="{{ question.id }}">
+
+        </div>
+        <div class="col-md-4">
+            <button type="button" id="valider" class="btn mx-3" hx-post="{% url 'add-question' %}" hx-target="#response-div" hx-trigger="click" hx-swap="beforeend" style="background-color: #6201B3;color: white">repondre</button>
+        </div>
+
+    </form>
+    <div id="response-div" hx-target="this" hx-get="{% url 'get-responses' pk=question.id %}" hx-trigger="every 1s" hx-swap="innerHTML">
+    {% for response in responses %}
+        {% if response.owner_type == "2" %}
+        <div class="card mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+            <div class="card-header text-light" style="background-color: #1C2333">
+                {% if response.owner_type == "2" %}
+                    <h6 class="text-left"><img class="" src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.student.name }}</h6>
+                {% elif response.owner_type == "1"  %}
+                    <h6 class="text-end"><img src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.teacher.name }}</h6>
+                {% endif %}
+            </div>
+            <div class="card-body text-center" style="background-color: #1C2333">
+                <hr>
+              <h5 class="card-text">{{ response.response }}</h5>
+
+            </div>
+            <div class="card-footer text-center text-light" style="background-color: #1C2333">
+              il y a: {{ response.date|timesince }}
+            </div>
+          </div>
+
+           {% else %}
+
+            <div class="card mt-3 mb-3 text-dark" style="background-color: #6B97FA">
+            <div class="card-header" style="background-color: #6B97FA">
+                {% if response.owner_type == "2" %}
+                    <h6 class="text-left"><img class="" src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.student.name }}</h6>
+                {% elif response.owner_type == "1"  %}
+                    <h6 class="text-end"><img src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.teacher.name }}</h6>
+                {% endif %}
+            </div>
+            <div class="card-body text-center" style="background-color:#6B97FA">
+                <hr>
+              <h5 class="card-text">{{ response.response }}</h5>
+
+            </div>
+            <div class="card-footer text-center" style="background-color: #6B97FA">
+              il y a: {{ response.date|timesince }}
+            </div>
+          </div>
+
+
+        {% endif %}
+
+    {% endfor %}
+    </div>
+    </div>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    const form = document.getElementById("valider")
+    form.addEventListener("click", (e) => {
+        setTimeout(() => {
+            document.getElementById("res").value = ""
+        }, 1000)
+    })
+
+</script>
+
+
+{% endblock %}

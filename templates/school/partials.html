@@ -1,0 +1,310 @@
+{% load static %}
+{% include 'school/message.html' %}
+{% if course1 %}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">{{ course1.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+              <div class="card mb-3">
+                  <img src="{{ course1.image.url }}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5>Description:</h5>
+                    <p>{{ course1.description }}</p>
+                    <h5>Heures:{{ course1.hours }}</h5>
+                    <hr>
+                    <h5>Promotion</h5>
+                      <ul class="list-group">
+                      {% for promo in course1.promotion.all %}
+
+                              <li class="list-group-item">{{ promo.name }}</li>
+
+                      {% endfor %}
+                        </ul>
+                  </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" hx-post="{% url 'course-detail' course1.id %}" hx-target="#doc-list" hx-swap="beforeend">
+                    {% csrf_token %}
+                    <h5>Ajouter un document</h5>
+                    <input type="file" id="n" name="note" accept=".pdf,.doc,.docx" class="form-control" required>
+                    <input type="hidden" name="id_n" value="{{ course1.id }}" id="id">
+                    <input type="submit" hx-trigger="click"  id="val" class="btn btn-primary mt-3" value="ajouter" />
+                    <hr>
+
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    documents du cours
+                    </a>
+
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body" id="doc-list">
+                            {% for doc in course1.note.all %}
+
+                              <li class="list-group-item"><a href="{% if doc.file %}{{ doc.file.url }}{% endif %}" target="_blank" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                </svg>{{ doc.file }}</a>
+                              </li>
+
+                            {% endfor %}
+                        </div>
+                </div>
+
+                </form>
+          </div>
+        </div>
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+                $(document).ready(function() {
+                $("#offcanvasRight").offcanvas('show');
+            });
+        </script>
+{% endif %}
+
+{% if doc %}
+    <li class="list-group-item"><a href="{% if doc.file %}{{ doc.file.url }}{% endif %}" target="_blank" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                </svg>{{ doc.file }}</a>
+                              </li>
+
+{% endif %}
+
+{% if add_response == True %}
+    {% include 'school/message.html' %}
+    <div class="card mt-3 mb-3" style="background-color: #6201B3">
+            <div class="card-header text-light" style="background-color: #6201B3">
+                {% if response.owner_type == "2" %}
+                    <h6 class="text-left">{{ response.owner.student.name }}</h6>
+                {% elif response.owner_type == "1"  %}
+                    <h6 class="text-end">{{ response.owner.teacher.name }}</h6>
+                {% endif %}
+            </div>
+            <div class="card-body text-center" style="background-color: #6201B3;">
+                <hr>
+              <h5 class="card-text text-warning">{{ response.response }}</h5>
+
+            </div>
+            <div class="card-footer text-center text-light" style="">
+              Date et heure: {{ response.date }}
+            </div>
+          </div>
+{% endif %}
+
+
+
+{% if course2 %}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">{{ course2.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+              <div class="card mb-3">
+
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" style="margin-left: auto" aria-controls="collapseExample">
+      Travaux en cours <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ nbr_homeworks }}
+                    <span class="visually-hidden">Questions non répondues</span>
+                  </span>
+    </a>
+
+  <div class="collapse" id="collapseExample1">
+    <div class="card card-body">
+        <ul class="list-group">
+            {% for homework in homeworks %}
+                <li class="list-group-item"><a class="link-success" hx-get="{% url 'homework-detail-student' pk=homework.id %}" hx-target="#d-div" hx-trigger="click" hx-swap="innerHTML">{{ homework.type }} il y a {{ homework.date|timesince }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+  </div>
+                  <img src="{{ course2.image.url }}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5>Professeur:</h5>
+                    <p>{{ course2.teacher.name }}</p>
+                    <hr>
+                    <h5>Description:</h5>
+                    <p>{{ course2.description }}</p>
+                    <h5>Heures:{{ course2.hours }}</h5>
+                    <hr>
+                    <h5>Promotion</h5>
+                      <ul class="list-group">
+                      {% for promo in course2.promotion.all %}
+
+                              <li class="list-group-item">{{ promo.name }}</li>
+
+                      {% endfor %}
+                        </ul>
+                  </div>
+                </div>
+
+
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    documents du cours
+                    </a>
+
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body" id="doc-list">
+                            {% for doc in course2.note.all %}
+
+                              <li class="list-group-item"><a href="{% if doc.file %}{{ doc.file.url }}{% endif %}" target="_blank" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                </svg>{{ doc.file }}</a>
+                              </li>
+
+                            {% endfor %}
+                        </div>
+                </div>
+                <a class="btn btn-primary" href="{% url 'homework-for-course' pk=course2.id %}">tout les travaux</a>
+          </div>
+        </div>
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+                $(document).ready(function() {
+                $("#offcanvasRight").offcanvas('show');
+            });
+        </script>
+{% endif %}
+
+{% if homework %}
+    <div class="modal fade bd-example-modal-lg text-center" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered text-center modal-lg">
+      <div class="modal-content text-center">
+        <div class="modal-header text-center">
+          <h5 class="modal-title text-center" id="exampleModalToggleLabel">{{ homework.type }}{% if homework.title %} : {{ homework.title|lower }}{% endif %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="card det-div text-center alert-light" style="overflow-x: auto;">
+            <ul class="list-group alert alert-light">
+              <li class="list-group-item det-item">Type: {{ homework.type }}</li>
+              <li class="list-group-item det-item">Cours: {{ homework.course }}</li>
+              <li class="list-group-item det-item">Fichier: {% if homework.file %}<a class="link-primary" href="{{ homework.file.url }}">{{ homework.file.name }}</a>{% endif %}</li>
+              <li class="list-group-item det-item">sur:{{ homework.cote }}</li>
+              <li class="list-group-item det-item">Date de publication:{{ homework.date|timesince }}</li>
+              <li class="list-group-item det-item" style="">Fin: {{ homework.end }}</li>
+                {% if not homework.completed %}<li class="list-group-item" style="color: #3f6212;background-color: #d9f99d">en cours</li>{% else %}
+                 <li class="list-group-item det-item" style="color: #9f1239;background-color: #fb7185">cloturé</li>{% endif %}
+
+            </ul>
+
+
+    </div>
+
+    <div class="card alert alert-light det-div" style="">
+        <ul class="list-group mt-3 alert-light" style="">
+            <li class="list-group-item det-item" style="">Description:<hr>titre : {{ homework.title }}<hr>{{ homework.notice }}</li>
+        </ul>
+    </div>
+
+        </div>
+
+      <hr>
+      {% if is_sub == True %}
+          Commentaire:
+          <textarea class="form-control" name="comment" readonly>
+            {{ submission.comment }}
+          </textarea>
+          Mon Travail
+          <a class="link-primary" href="{{ submission.file.url }}">{{ submission.file.name }}</a>
+          {% if submission.coted == True %}
+              <div class="text-center">
+                Ma cote:
+                <input type="text" class="form-control text-center" value="{{ submission.cote }}" readonly>
+              </div>
+          {% endif %}
+          {% else %}
+          <form method="post" class="form-control text-center" enctype="multipart/form-data">
+          {% csrf_token %}
+          Commentaire:
+          <textarea class="form-control" name="comment">
+
+          </textarea>
+          Fichier:
+          <input type="file" class="form-control text-center" placeholder="deposer votre travail" name="submission" style="width: 40vh;margin: auto" required>
+          <input type="hidden" name="id_homework" value="{{ homework.id }}">
+          <input type="submit" class="btn btn-primary" value="déposer">
+      </form>
+        {% endif %}
+        {% if is_sub == True %}
+            <div class="text-center">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger mt-3 mb-3" name="del" value="supprimer">
+                    <input type="hidden" value="{{ submission.id }}" name="id_sub">
+                </form>
+
+            </div>
+        {% endif %}
+        </div>
+         </div>
+      </div>
+
+
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+                $(document).ready(function() {
+                $("#exampleModalToggle").modal('show');
+            });
+        </script>
+{% endif %}
+
+{% if responses %}
+    {% for response in responses %}
+        {% if response.owner_type == "2" %}
+        <div class="card mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+            <div class="card-header text-light" style="background-color: #1C2333">
+                {% if response.owner_type == "2" %}
+                    <h6 class="text-left"><img class="" src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.student.name }}</h6>
+                {% elif response.owner_type == "1"  %}
+                    <h6 class="text-end"><img src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.teacher.name }}</h6>
+                {% endif %}
+            </div>
+            <div class="card-body text-center" style="background-color: #1C2333">
+                <hr>
+              <h5 class="card-text">{{ response.response }}</h5>
+
+            </div>
+            <div class="card-footer text-center text-light" style="background-color: #1C2333">
+              il y a: {{ response.date|timesince }}
+            </div>
+          </div>
+
+           {% else %}
+
+            <div class="card mt-3 mb-3 text-dark" style="background-color: #6B97FA">
+            <div class="card-header" style="background-color: #6B97FA">
+                {% if response.owner_type == "2" %}
+                    <h6 class="text-left"><img class="" src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.student.name }}</h6>
+                {% elif response.owner_type == "1"  %}
+                    <h6 class="text-end"><img src="{% static 'img/person-circle.svg' %}" alt="ed"> {{ response.owner.teacher.name }}</h6>
+                {% endif %}
+            </div>
+            <div class="card-body text-center" style="background-color:#6B97FA">
+                <hr>
+              <h5 class="card-text">{{ response.response }}</h5>
+
+            </div>
+            <div class="card-footer text-center" style="background-color: #6B97FA">
+              il y a: {{ response.date|timesince }}
+            </div>
+          </div>
+
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+
+{% if add_new_question %}
+
+{% endif %}

@@ -1,0 +1,175 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+
+{% block content %}
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">Prolongation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <form method="post">
+              {% csrf_token %}
+              <input class="form-control" type="datetime-local" name="end" min="" id="defaultForm-date" required>
+              <input type="submit" class="btn btn-primary text-center mt-3" name="prolong" value="valider">
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+    {% include 'school/message.html' %}
+    <div class="row col-md-9 mb-3">
+    <div class="card det-div text-center" style="overflow-x: auto;background-color: #1C2333;color: #B0B3B9">
+        <ul class="list-group list-group-horizontal alert" style="background-color: #1C2333;color: #B0B3B9">
+          <li class="list-group-item det-item">Type: {{ homework.type }}</li>
+          <li class="list-group-item det-item">Cours: {{ homework.course }}</li>
+          <li class="list-group-item det-item">Fichier: {% if homework.file %}<a class="link-warning" href="{{ homework.file.url }}">{{ homework.file.name }}</a>{% endif %}</li>
+          <li class="list-group-item det-item">sur:{{ homework.cote }}</li>
+          <li class="list-group-item det-item">Date de publication:{{ homework.date|timesince }}</li>
+          <li class="list-group-item det-item" style="">Fin: {{ homework.end }}</li>
+            {% if not homework.completed %}<li class="list-group-item" style="color: #3f6212;background-color: #d9f99d">en cours</li>{% else %}
+             <li class="list-group-item det-item" style="color: #9f1239;background-color: #fb7185">cloturé</li>{% endif %}
+
+        </ul>
+
+    </div>
+    </div>
+    <div class="row col-md-9">
+    <div class="card alert alert-light det-div" style="background-color: #1C2333;color: #B0B3B9">
+        <ul class="list-group mt-3 alert-light" style="background-color: #1C2333;color: #B0B3B9">
+            <li class="list-group-item det-item" style="">Description:<hr>titre : {{ homework.title }}<hr>{{ homework.notice }}</li>
+        </ul>
+    </div>
+    </div>
+    <div class="row text-center mt-3">
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-lg rounded-lg" value="cloturer" name="cloturer" style="background-color: #6B97FA">
+
+            <a class="btn btn-lg" data-bs-toggle="modal" href="#exampleModalToggle" role="button" style="background-color:#6B97FA">prolonger</a>
+
+        </form>
+    </div>
+
+    <h1 class="text-center mt-3" style="color: #6B97FA">Liste des travaux deposés</h1>
+
+  <div class="collapse" id="collapseExample">
+     <div class="card">
+        <div class="text-end" style="background-color: #d9f99d">
+            <button type="button" class="close" id="cls">x</button>
+        </div>
+        <div class="card card-header text-center" style="color: #3f6212;background-color: #d9f99d">
+            <h4>{{ sub.student.name }}</h4>
+            <h6>{{ sub.student.promotion }}</h6>
+            <p>remis le : {{ sub.date }}</p>
+        </div>
+
+        <div class="card card-body text-center">
+            Commentaire:
+            <p>{{ sub.comment }}</p>
+            <hr>
+
+            Fichier:<a class="link-primary" href="{{ sub.file.url }}">{{ sub.file.name }}</a>
+            <hr>
+            {% if sub.coted == False %}
+                <form method="post" class="form-control text-center">
+                    {% csrf_token %}
+
+                    Cote:
+                    <input type="number" class="form-control text-center"  min="0" max="{{ homework.cote }}" name="cote" style="width: 20vh;margin: auto">
+                    <input type="submit" class="btn btn-primary mt-3" value="coter">
+
+                </form>
+                {% else %}
+                Cote:
+                <input type="text" class="form-control text-center" value="{{ sub.cote }}/{{ homework.cote }}" style="margin: auto;width: 20vh;" readonly>
+            {% endif %}
+        </div>
+
+    <div class="card-footer text-center">
+
+    </div>
+     </div>
+  </div>
+    <script>
+        $("#cls").click(function (){
+            $("#collapseExample").collapse('hide');
+        });
+    </script>
+    {% if sub %}
+    <script>
+        $(document).ready(function() {
+        $("#collapseExample").collapse('show');
+        });
+    </script>
+    {% endif %}
+
+    <div class="row col-md-9 table-responsive mt-3 rounded-right rounded-left">
+        <table class="table rounded-right rounded-left" style="">
+            <thead class="text-light" style="background-color: #1C2333">
+                <tr>
+                    <th>Etudiant</th>
+                    <th>Faculté</th>
+                    <th>Fichier</th>
+                    <th>Cote</th>
+                    <th>Date/Heure</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody class="bg-light">
+
+                    {% for sub in submission %}
+                        <tr>
+                            <td>{{ sub.student.name }}</td>
+                            <td>{{ sub.student.promotion }}</td>
+                            <td><a href="{{ sub.file.url }}">{{ sub.file.name }}</a></td>
+                            <td>{% if sub.coted == True %}{{ sub.cote }}{% endif %}</td>
+                            <td>{{ sub.date }}</td>
+                            {% if sub.test_status == True %}<td class="bg-danger text-light">remis en retard</td>{% else %}<td style="color: #3f6212;background-color: #d9f99d">remis à l'heure</td>{% endif %}
+                            <form method="get" class="form-control">
+                                {% csrf_token %}
+                                <td><input type="submit" value="plus" class="form-control btn col-12" style="background-color: #6B97FA" /></td>
+                                <input type="hidden" value="{{ sub.id }}" name="sub_id">
+                            </form>
+
+                        </tr>
+                    {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+     <script>
+        $(document).ready(function (){
+            var today = new Date();
+            var month = today.getMonth()+1;
+            var day = today.getDate();
+            var year = today.getFullYear();
+            if (month < 10){
+                month = '0'+month.toString();
+            }
+            if (day < 10){
+                day = '0'+day.toString()
+            }
+            var max_date = year+'-'+month+'-'+day+'T00:00';
+            $('#defaultForm-date').attr('min', max_date);
+            console.log(max_date);
+        });
+    </script>
+
+
+{% endblock %}

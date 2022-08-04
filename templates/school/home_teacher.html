@@ -1,0 +1,76 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'school/message.html' %}
+    <div class="row mt-3 col-md-9">
+        <div class="col col-md-4" >
+            <div class="card alert alert-success">
+                <div class="card card-header">
+                    <h4 class="text-center">Mes Etudiants</h4>
+                </div>
+                <div class="card card-body alert-success">
+                    <h1 class="text-center">{{ nbr_student }}</h1>
+                </div>
+                <div class="card card-footer">
+
+                </div>
+            </div>
+        </div>
+
+            <div class="col col-md-4">
+            <div class="card alert alert-danger">
+                <div class="card card-header">
+                    <h4 class="text-center text-sm-center">Mes Promotions</h4>
+                </div>
+                <div class="card card-body alert-danger">
+                    <h1 class="text-center">{{ nbr_prom }}</h1>
+                </div>
+                <div class="card card-footer">
+
+                </div>
+            </div>
+            </div>
+
+            <div class="col col-md-4">
+            <div class="card alert alert-warning" >
+                <div class="card card-header">
+                    <h4 class="text-center">Mes Cours</h4>
+                </div>
+                <div class="card card-body alert-warning">
+                    <h1 class="text-center">{{ nbr_courses }}</h1>
+                </div>
+                <div class="card card-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+        <h2 class="text-center mt-lg-5" style="color: #6B97FA">Mes etudiants</h2>
+
+    <div class="row col-md-9">
+    {% for student in students %}
+        <div class="card text-center mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+            <div class="card-header" style="background-color: #1C2333">
+
+            </div>
+            <div class="card-body" style="background-color: #1C2333">
+              <h5 class="card-title"><img src="{% static 'img/person-circle.svg' %}" alt=""> {{ student.name }}</h5>
+              <p class="card-text">{{ student.promotion }}</p>
+
+            </div>
+            <div class="card-footer" style="">
+                {% if student.user.last_login %}
+                    derniere connexion: il y a {{ student.user.last_login|timesince }}
+                    {% else %}
+                    derniere connexion: jamais
+                {% endif %}
+            </div>
+          </div>
+
+    {% endfor %}
+    </div>
+{% endblock %}

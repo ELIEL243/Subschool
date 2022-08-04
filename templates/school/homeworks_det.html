@@ -1,0 +1,150 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+
+{% block meta %}<!--<meta http-equiv="refresh" content="3">-->{% endblock %}
+{% block content %}
+    {% include 'school/message.html' %}
+    <div class="col-md-9 text-end">
+        <button class="btn text-dark" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" style="background-color: #6B97FA;color: white">Nouveau travail</button>
+    </div>
+    <hr>
+    <h1 class="text-center" style="color: #6B97FA">Mes Travaux de {{ course1.name }}</h1>
+
+    <!--                            TABLE DES TRAVAUX                        -->
+    <!--
+    <div class="table-responsive" style="">
+        <table class="table table-bordered" style="background-color: white;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Cours</th>
+                    <th>Fichier</th>
+                    <th>Date</th>
+                    <th>Fin</th>
+                    <th>Ponderation</th>
+                    <th>Type</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for homework in duttys %}
+                    <tr>
+                        <td>{{ homework.course.name }}</td>
+                        <td><a class="" href="{% if homework.file %}{{ homework.file.url }}{% endif %}">{% if homework.file %}<i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                              <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                              <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                            </svg></i>{{ homework.file.name }}{% endif %}</a></td>
+                        <td>{{ homework.date }}</td>
+                        <td>{{ homework.end }}</td>
+                        <td>{{ homework.cote }}</td>
+                        <td>{{ homework.type }}</td>
+                       {% if not homework.completed %}<td style="color: #3f6212;background-color: #d9f99d">en cours</td>{% else %}
+                        <td class="" style="color: #9f1239;background-color: #fb7185">cloturé</td>{% endif %}
+                        <td><a class="btn btn-success" href="{% url 'homework-detail' id=homework.id %}">voir</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    -->
+    <div class="col col-md-2 text-light" style="background-color: #1C2333">
+        <h3 class="text-center">cours</h3>
+        <ul class="list-group text-light text-center">
+            {% for course in courses %}
+                <li class="list-group-item bg-dark text-light">{% if course.name == course1.name %}<a class="nav-link text-dark" href="{% url 'homeworks-det' course.id %}" style="background-color: #6B97FA">{{ course.name }}</a>{% else %}<a class="nav-link text-light bg-dark" href="{% url 'homeworks-det' course.id %}" style="">{{ course.name }}</a>{% endif %}</li>
+            {% endfor %}
+          </ul>
+    </div>
+    <div class="col col-md-9">
+
+    <div class="row col-md-9">
+        {% for homework in duttys %}
+            <a class="nav-link" href="{% url 'homework-detail' homework.id %}">
+            <div class="card text-center mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+                <div class="card-header" style="background-color: #1C2333;color: #B0B3B9">
+                    <h5><img class="" style="" src="{% static 'img/book.svg' %}" alt=""> {{ homework.type }}{% if homework.title %} : {{ homework.title|lower }}{% endif %}</h5>
+                </div>
+                <div class="card-body" style="background-color: #1C2333;color: #B0B3B9">
+                  <h5 class="card-title" style="background-color: #1C2333;color: #B0B3B9;opacity: 1;">{{ homework.course.name }}</h5>
+                  <hr>
+                    {% if not homework.completed %}<div class="alert" style="color: #3f6212;background-color: #d9f99d"><h6>en cours</h6></div>{% else %}
+                        <div class="alert text-light" style="background-color: #ef4444"><h6 style="opacity: 1;">cloturé</h6></div>{% endif %}
+
+                </div>
+                <div class="card-footer" style="background-color: #1C2333;color: #B0B3B9">
+                    <p>publié il y a : {{ homework.date|timesince }}</p>
+                </div>
+              </div>
+            </a>
+        {% endfor %}
+    </div>
+    </div>
+
+
+        <!--                            FORMULAIRE D'AJOUT DE TRAVAUX                        -->
+
+ <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalToggleLabel">Nouveau travail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="form-group" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+            Cours:
+            <select class="form-control" name="cours" required>
+                {% for course in courses %}
+                    <option>{{ course.name }}</option>
+                {% endfor %}
+            </select>
+            Titre:
+            <input type="text" class="form-control" name="titre" required>
+            Type:
+            <select class="form-control" name="type" required>
+                <option>TP</option>
+                <option>TD</option>
+                <option>INTERROGATION</option>
+            </select>
+            Fichier:
+            <input class="form-control" type="file" name="file">
+            Écheance:
+            <input class="form-control" type="datetime-local" name="end" min="" id="defaultForm-date" required>
+            Description:
+            <textarea class="form-control" name="desc">
+
+            </textarea>
+            Ponderation:
+            <input type="number" class="form-control" min="5" name="cote" required>
+
+
+      </div>
+      <div class="modal-footer">
+        <input class="btn btn-primary" name="new_tp" type="submit" value="valider">
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+     <script>
+        $(document).ready(function (){
+            var today = new Date();
+            var month = today.getMonth()+1;
+            var day = today.getDate();
+            var year = today.getFullYear();
+            if (month < 10){
+                month = '0'+month.toString();
+            }
+            if (day < 10){
+                day = '0'+day.toString()
+            }
+            var max_date = year+'-'+month+'-'+day+'T00:00';
+            $('#defaultForm-date').attr('min', max_date);
+            console.log(max_date);
+        });
+    </script>
+
+{% endblock %}

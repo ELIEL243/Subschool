@@ -1,0 +1,71 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'school/message.html' %}
+    <h1 class="text-center" style="color: #6B97FA">Mes Videos</h1>
+
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">Nouvelle video</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+            Cours:
+              <select class="form-control" name="course" required>
+                {% for course in courses %}
+                    <option>{{ course.name }}</option>
+                {% endfor %}
+              </select>
+
+                <input type="text" class="form-control" placeholder="titre ou chapitre" name="title" required>
+                Selectionner la video:
+                <input type="file" accept="video/mp4" name="video" class="form-control">
+
+                <input type="submit" class="btn btn-dark text-center mt-3" value="valider">
+          </form>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="row col-md-12">
+        <div class="row text-end">
+            <a class="btn btn-outline col-md-4" data-bs-toggle="modal" style="background-color: #6B97FA;margin-left: auto" href="#exampleModalToggle" role="button">Nouvelle question</a>
+        </div>
+        {% for video in videos %}
+            <div class="col-lg-4 mt-3" style="margin-bottom: 20px;">
+              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh">
+                <div class="card-header" style="background-color: #1C2333">
+                    <h5 class="card-title text-center" style="">{{ video.title }}</h5>
+                </div>
+                <div class="card card-body" style="width: 45vh;object-fit: initial;height: 35vh;margin: auto;background-color:#1C2333">
+                    <video class="embed-responsive embed-responsive-16by9" controls="controls">
+                        <source src="{{ video.video.url }}" type="video/mp4" />
+                    </video>
+
+                </div>
+
+                <div class="card card-footer text-center" style="background-color: #1C2333;color: #B0B3B9">
+                    <h5 class="card-comment">{{ video.course.name }}</h5>
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

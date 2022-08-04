@@ -1,0 +1,63 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      style="background-color: #31005C"
+        >
+        <span class="navbar-toggler-icon"></span>
+      <i class="fas fa-bars"></i>
+    </button>
+    <a class="navbar-brand brand-site text-warning mx-auto" style="" href="{% url 'home-student' %}"><img src="{% static 'img/notes.png' %}" class="rounded" style="height: 5vh;width: 5vh">Subschool</a>
+
+    <div class="collapse navbar-collapse" style="margin-left: 10vh" id="navbarNavAltMarkup">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link {{ activehome }}" aria-current="page" href="{% url 'home-student' %}">Accueil</a>
+
+          </li>
+          <li class="nav-item">
+                        <a class="nav-link {{ activedut }}" href="{% url 'homework-for-student' %}">Travaux</a>
+          </li>
+
+          <li class="nav-item">
+                <a class="nav-link {{ activevideo }}" href="{% url 'student-video' %}">Videos</a>
+          </li>
+
+          <li class="nav-item">
+              <!--<a class="nav-link {{ activeqr }}" href="{% url 'questions' %}">Q&R( <strong>{{ nbr_questions }}</strong> )</a> -->
+              <a type="button" class="nav-link btn btn-warning text-dark position-relative" id="qr-not" href="{% url 'question-student' %}">
+                Q&R
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ nbr_msg }}
+                    <span class="visually-hidden">Questions non répondues</span>
+                  </span>
+                </a>
+          </li>
+
+      </ul>
+
+
+    </div>
+
+    <div class="d-flex align-items-center mx-5 mt-3" id="auth-div" style="display: flex;flex-direction: row">
+
+        <p class="text-light username" style="">{{ request.user.student  }}</p>
+
+        {% if request.user.is_authenticated %}
+                <a href="{% url 'logout' %}" id="auth-btn" style="" class="btn btn-warning mx-5 alert alert-warning">Deconnexion</a>
+              {% endif %}
+
+
+    </div>
+
+    </div>
+
+</nav>

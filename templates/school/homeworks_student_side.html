@@ -1,0 +1,51 @@
+{% extends 'school/base_student.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'school/message.html' %}
+
+    <h1 class="text-center" style="color: #6B97FA">Tout les travaux</h1>
+    <div id="det-div">
+
+    </div>
+    <div class="col col-md-2 text-light" style="background-color: #1C2333">
+        <h3 class="text-center">cours</h3>
+        <ul class="list-group text-light text-center">
+            {% for course in courses %}
+                <li class="list-group-item bg-dark text-light"><a class="nav-link text-light bg-dark" href="{% url 'student-homeworks-det' course.id %}">{{ course.name }}</a></li>
+            {% endfor %}
+          </ul>
+    </div>
+
+    <div class="row col-md-9">
+        {% for homework in homeworks %}
+            <a class="nav-link" hx-get="{% url 'homework-detail-student' pk=homework.id %}" hx-target="#det-div" hx-trigger="click" hx-swap="innerHTML">
+            <form method="get">
+            {% csrf_token %}
+
+                <input type="hidden" name="id_homework" value="{{ homework.id }}">
+
+            </form>
+            <div class="card text-center mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+                <div class="card-header text-light">
+                    <h5><img class="" style="" src="{% static 'img/book.svg' %}" alt=""> {{ homework.type }}{% if homework.title %} : {{ homework.title|lower }}{% endif %}</h5>
+                </div>
+                <div class="card-body " style="background-color: #1C2333">
+                  <h5 class="card-title" style="opacity: 1;">{{ homework.course.name }}</h5>
+                  <hr>
+                    {% if not homework.completed %}<div class="alert" style="color: #3f6212;background-color: #d9f99d"><h6>en cours</h6></div>{% else %}
+                        <div class="alert text-light bg-danger" style="background-color: #f87171"><h6 style="opacity: 1;">cloturé</h6></div>{% endif %}
+
+                </div>
+                <div class="card-footer" style="background-color: #1C2333">
+                    <p>publié il y a : {{ homework.date|timesince }}</p>
+                </div>
+              </div>
+            </a>
+        {% endfor %}
+    </div>
+
+
+        <!--                            FORMULAIRE D'AJOUT DE TRAVAUX                        -->
+
+{% endblock %}

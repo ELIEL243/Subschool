@@ -1,0 +1,45 @@
+{% extends 'school/base_student.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'school/message.html' %}
+    <h1 class="text-center" style="color: #6B97FA">Videos de {{ course1.name }}</h1>
+    <div class="col col-md-2 text-light" style="background-color: #1C2333">
+        <h3 class="text-center">cours</h3>
+        <ul class="list-group text-light text-center">
+            {% for course in courses %}
+                <li class="list-group-item bg-dark text-light">{% if course.name == course1.name %}<a class="nav-link text-dark" href="{% url 'student-video-course' course.id %}" style="background-color: #6B97FA">{{ course.name }}</a>{% else %}<a class="nav-link text-light bg-dark" href="{% url 'student-video-course' course.id %}" style="">{{ course.name }}</a>{% endif %}</li>
+            {% endfor %}
+          </ul>
+    </div>
+    <div class="col col-md-9">
+    <div class="row col-md-12">
+        {% for video in videos %}
+            <div class="col-lg-4 mt-3 mx-3" style="margin-bottom: 20px;">
+              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh">
+                <div class="card-header" style="background-color: #1C2333">
+                    <h5 class="card-title text-center" style="">{{ video.title }}</h5>
+                </div>
+                <div class="card card-body" style="width: 45vh;object-fit: initial;height: 35vh;margin: auto;background-color:#1C2333">
+                    <video class="embed-responsive embed-responsive-16by9" controls="controls">
+                        <source src="{{ video.video.url }}" type="video/mp4" />
+                    </video>
+
+                </div>
+
+                <div class="card card-footer text-center" style="background-color: #1C2333;color: #B0B3B9">
+                    <h5 class="card-comment">{{ video.course.name }}</h5>
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+        {% endfor %}
+    </div>
+    </div>
+
+
+{% endblock %}

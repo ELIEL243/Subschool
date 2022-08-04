@@ -1,0 +1,190 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+{% include 'school/course_modal.html' %}
+{% block content %}
+    <h1 class="text-center text-light">Mes cours</h1>
+    {% include 'school/message.html' %}
+    <hr>
+
+
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="course-title"></h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="card shadow">
+
+                <div class="card card-body" id="course-img" style="width: 100%;object-fit: initial">
+                </div>
+                <hr>
+                Promotion:<h5 id="promo"></h5>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h5>Ajouter un document</h5>
+                    <input type="file" name="note" accept=".pdf,.doc,.docx" class="form-control">
+                    <input type="hidden" name="id_n" id="id">
+                    <button class="btn btn-primary mt-3">ajouter</button>
+                    <hr>
+                    <a class="link-info">voir les documents du cours</a>
+
+                </form>
+                <div class="card card-footer" id="course-desc">
+
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalReservationForm">Reserver</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary" name="canvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>
+
+    </form>
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+
+  </div>
+</div>
+
+
+
+
+
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-lg-4 mt-3" style="margin-bottom: 20px;">
+              <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title text-center">{{ course.name }}</h5>
+                </div>
+                {% for promo in course.promotion.all %}
+
+                <div class="card card-body" style="width: 100%;object-fit: initial">
+                   <a href="#"
+                        data-toggle="modal" class="building-link" data-title="{{ course.name }}" data-img="{{ course.image.url }}" data-desc="{{ course.description }}"
+                        data-target="#exampleModalCenter"
+                        data-id = "{{ course.id }}"
+                      data-promotion = "{{ promo }}"
+                   >{% if course.image %}
+                       <img class="card-img-top thumbnail" src="{{ course.image.url }}" alt="Card image cap" style="width: 100%;height: 50vh;object-fit: initial;">{% endif %}
+
+                   </a>
+                </div>
+                    {% endfor %}
+                <div class="card-footer">
+                    <h4 class="text-center" style="">
+                        <strong></strong>
+                    </h4>
+                    <center>
+
+
+                    </center>
+
+
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">Prolongation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+              {% csrf_token %}
+              <input class="form-control" type="datetime-local" name="end" min="" id="defaultForm-date" required>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+                <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script>
+        $('.building-link').click(function () {
+                $('#id').attr('value', $(this).data('id'));
+                $('#course-title').html($(this).data('title'));
+                const url = $(this).data('img');
+                $('#promo').html($(this).data('promotion'))
+                $('#course-img').html("<img class='card-img-top thumbnail' src='"+url+"' alt='Card image cap' style='width: 100%;height: 40vh;object-fit: initial;'>");
+                $('#course-desc').html("<h5><strong>Description:</strong></h5> <h6>"+$(this).data('desc'))
+            });
+
+    </script>
+
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script>
+        var myOffcanvas = document.getElementById('offcanvasRight')
+        var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+        bsOffcanvas.show()
+    </script>
+    <script>
+    $(document).ready(function(){
+        //$("#exampleModalCenter").modal('show');
+    });
+    </script>
+
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+     <script>
+        $(document).ready(function (){
+            var today = new Date();
+            var month = today.getMonth()+1;
+            var day = today.getDate();
+            var year = today.getFullYear();
+            if (month < 10){
+                month = '0'+month.toString();
+            }
+            if (day < 10){
+                day = '0'+day.toString()
+            }
+            var max_date = year+'-'+month+'-'+day+'T00:00';
+            $('#defaultForm-date').attr('min', max_date);
+            console.log(max_date);
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'school/base_student.html'  %}
+{% load static %}
+{% block content %}
+    {% include 'school/message.html' %}
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">Nouvelle question</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+              {% csrf_token %}
+            Cours:
+              <select class="form-control" name="course" required>
+                {% for course in courses %}
+                    <option>{{ course.name }}</option>
+                {% endfor %}
+              </select>
+
+                <input type="text" class="form-control" placeholder="titre ou chapitre" name="title" required>
+
+                <textarea class="form-control" placeholder="Votre question..." name="question" required>
+
+                </textarea>
+
+                <input type="submit" class="btn btn-dark text-center mt-3" value="valider">
+          </form>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <h1 class="text-center" style="color: #6B97FA">Mes Questions</h1>
+    <div class="row col-md-9 mt-3">
+    <div class="row text-end">
+        <a class="btn btn-outline col-md-4" data-bs-toggle="modal" style="background-color: #6B97FA;margin-left: auto" href="#exampleModalToggle" role="button">Nouvelle question</a>
+
+    </div>
+
+        {% for question in questions %}
+        <a class="nav-link" href="{% url 'detail-question-student' question.id %}">
+        <div class="card text-center mt-3 mb-3" style="background-color: #1C2333;color:#B0B3B9">
+            <div class="card-header text-light" style="background-color: #1C2333;">
+                <h4 class="text-center">{{ question.course.name }}</h4>
+                {% if question.get_nbr_response_student != 0 %}
+                <button type="button" class="btn btn-primary">
+                  reponses non lues <span class="badge badge-danger bg-danger">{{ question.get_nbr_response_student }}</span>
+                </button>
+                {% endif %}
+            </div>
+            <div class="card-body" style="background-color: #1C2333;">
+              <h5 class="card-title"><img src="{% static 'img/person-circle.svg' %}"> {{ question.student.name }}</h5>
+                <hr>
+              <h5 class="card-text">{{ question.question }}</h5>
+
+            </div>
+            <div class="card-footer" style="background-color: #1C2333;">
+              il y a: {{ question.date|timesince }}
+            </div>
+          </div>
+        </a>
+    {% endfor %}
+    </div>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'school/base_teacher.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'school/message.html' %}
+    <h1 class="text-center mt-3" style="color: #6B97FA">Questions</h1>
+
+    <div class="row col-md-9 mt-3">
+    {% for question in questions %}
+        <a class="nav-link" href="{% url 'detail-question' question.id %}">
+        <div class="card text-center mt-3 mb-3" style="background-color: #1C2333;color: #B0B3B9">
+            <div class="card-header" style="background-color: #1C2333;color: #B0B3B9">
+                <h4 class="text-center">{{ question.course.name }}</h4>
+                {% if question.get_nbr_response_teacher != 0 %}
+                <button type="button" class="btn btn-primary">
+                  reponses non lues <span class="badge badge-danger bg-danger">{{ question.get_nbr_response_teacher }}</span>
+                </button>
+                {% endif %}
+            </div>
+            <div class="card-body" style="background-color: #1C2333;color: #B0B3B9">
+              <h5 class="card-title"><img src="{% static 'img/person-circle.svg' %}"> {{ question.student.name }}</h5>
+                <hr>
+              <h5 class="card-text text-light" style="background-color: #1C2333;color: #B0B3B9">{{ question.question }}</h5>
+
+            </div>
+            <div class="card-footer" style="background-color: #1C2333;color: #B0B3B9">
+              il y a: {{ question.date|timesince }}
+            </div>
+          </div>
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}
