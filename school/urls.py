@@ -2,7 +2,7 @@ from django.urls import path
 from .views import Login, teacher_admin, student_admin, courses_teach, Logout, homeworks, homeworkdetail, course_detail, \
     QR, detail_question, add_question, course_detail_student, homeworks_for_course, homeworks_for_student, \
     homework_detail_student, questions_student_side, response_student_side, get_responses_question, clean_view, \
-    teacher_video, student_video, student_video_course, homeworks_for_student_det, homeworks_det
+    teacher_video, student_video, student_video_course, homeworks_for_student_det, homeworks_det, DownloadView
 
 urlpatterns = [
     path('', Login, name="login"),
@@ -29,4 +29,5 @@ urlpatterns = [
     path('add_question/', add_question, name="add-question"),
     path('clean/', clean_view, name="clean-view"),
     path('homework-detail-student/<str:pk>', homework_detail_student, name="homework-detail-student"),
+    path('download-file/<str:filepath>', DownloadView, name="download"),
 ]

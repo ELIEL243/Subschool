@@ -9,6 +9,9 @@ from .decorators import allowed_users
 from .models import *
 from .utils import CheckHomeWork
 import threading
+import os
+import mimetypes
+
 # Create your views here.
 
 """ 
@@ -444,3 +447,22 @@ def student_video_course(request, pk):
 
 def clean_view(request):
     return HttpResponse("")
+
+
+def DownloadView(request, filepath):
+    # Open the file for reading conte
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    note = Note.objects.get(id=filepath)
+    filepath = BASE_DIR + note.file.url
+    filepath.encode()
+    print(filepath)
+    filename = 'jf'
+    path = open(filepath, 'rb')
+    # Set the mime type
+    mime_type, _ = mimetypes.guess_type(filepath)
+    # Set the return value of the HttpResponse
+    response = HttpResponse(path, content_type=mime_type)
+    # Set the HTTP header for sending to browser
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    # Return the response value
+    return response
