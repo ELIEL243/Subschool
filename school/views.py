@@ -64,6 +64,7 @@ def teacher_admin(request):
     test = ''
     stds = students_teacher(request)
     students = stds
+    nbr_students = len(students)
     questions = Question.objects.filter(course__teacher=request.user.teacher)
     nbr_questions = questions.filter(satisfied=False).count()
 
@@ -71,10 +72,6 @@ def teacher_admin(request):
         for promo in course.promotion.all():
             if promo.name != test:
                 nbr_prom += 1
-            test = promo.name
-        for promo in course.promotion.all():
-            if promo.name != test:
-                nbr_students += Student.objects.filter(promotion=promo).count()
             test = promo.name
     context = {'nbr_courses': nbr_courses, 'nbr_prom': nbr_prom, 'nbr_student': nbr_students, 'activehome': 'active', 'students': students, 'nbr_questions': nbr_questions}
     return render(request, 'school/home_teacher.html', context)
