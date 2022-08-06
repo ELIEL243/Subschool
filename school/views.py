@@ -456,7 +456,7 @@ def DownloadView(request, filepath):
     filepath = BASE_DIR + note.file.url
     filepath.encode()
     print(filepath)
-    filename = 'jf'
+    filename = note.file.name
     path = open(filepath, 'rb')
     # Set the mime type
     mime_type, _ = mimetypes.guess_type(filepath)
