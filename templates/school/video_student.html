@@ -15,13 +15,13 @@
     <div class="col col-md-9">
     <div class="row col-md-12">
         {% for video in videos %}
-            <div class="col-lg-4 mt-3 mx-3" style="margin-bottom: 20px;">
-              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh">
+            <div class="col-lg-4 mt-3 mx-3" style="margin-bottom: 20px;height: 55vh">
+              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh;height: 55vh">
                 <div class="card-header" style="background-color: #1C2333">
                     <h5 class="card-title text-center" style="">{{ video.title }}</h5>
                 </div>
                 <div class="card card-body" style="width: 45vh;object-fit: initial;height: 35vh;margin: auto;background-color:#1C2333">
-                    <video class="embed-responsive embed-responsive-16by9" controls="controls">
+                    <video class="embed-responsive embed-responsive-16by9" controls="controls" style="width: 40vh;object-fit: initial;height: 35vh">
                         <source src="{{ video.video.url }}" type="video/mp4" />
                     </video>
 
