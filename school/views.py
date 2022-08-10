@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import LoginForm
 from .decorators import allowed_users
 from .models import *
@@ -172,15 +174,17 @@ def homeworks_det(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['teacher'])
+@csrf_exempt
 def teacher_video(request):
     videos = Video.objects.filter(course__teacher=request.user.teacher)
     courses = Course.objects.filter(teacher=request.user.teacher)
     if request.method == "POST":
         course = Course.objects.get(name=request.POST.get('course'))
         title = request.POST.get('title')
-        video = request.FILES.get('video')
+        video = request.FILES.get('file')
         Video.objects.create(course=course, title=title, video=video)
         messages.success(request, "video ajoutée avec succes !")
+        return redirect('teacher-video')
     return render(request, 'school/video_teacher.html', context={'courses': courses, 'videos': videos, 'activevideo': 'active'})
 
 

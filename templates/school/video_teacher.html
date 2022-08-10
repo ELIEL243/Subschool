@@ -13,21 +13,34 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
+          <form method="post" enctype="multipart/form-data" onsubmit="onFormSubmit(event)">
+          {% csrf_token %}
+
             Cours:
-              <select class="form-control" name="course" required>
+              <select class="form-control" id="course" required>
                 {% for course in courses %}
                     <option>{{ course.name }}</option>
                 {% endfor %}
               </select>
 
-                <input type="text" class="form-control" placeholder="titre ou chapitre" name="title" required>
+                <input type="text" class="form-control" placeholder="titre ou chapitre" name="title" id="titre" required>
                 Selectionner la video:
-                <input type="file" accept="video/mp4" name="video" class="form-control">
+                <input type="file" accept="video/mp4" name="video" id="file" class="form-control">
 
-                <input type="submit" class="btn btn-dark text-center mt-3" value="valider">
+              <button type="submit" class="btn btn-dark text-center mt-3" id="upload_btn">valider</button>
           </form>
+            <div class="" id="progress-wrapper" style="display: none">
+                <label id="progress_status"></label>
+                <div class="progress mb-3">
+                    <div id="progress" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+
+                    </div>
+
+                </div>
+                <div id="alert_wrapper">
+
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
 
@@ -37,18 +50,18 @@
   </div>
 
 
-    <div class="row col-md-12">
+    <div class="row col-md-12">"
         <div class="row text-end">
             <a class="btn btn-outline col-md-4" data-bs-toggle="modal" style="background-color: #6B97FA;margin-left: auto" href="#exampleModalToggle" role="button">Nouvelle question</a>
         </div>
         {% for video in videos %}
             <div class="col-lg-4 mt-3" style="margin-bottom: 20px;">
-              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh">
+            <div class="card shadow text-light mx-3 mt-3" style="background-color: #1C2333;width: 45vh;height: 60vh;">
                 <div class="card-header" style="background-color: #1C2333">
                     <h5 class="card-title text-center" style="">{{ video.title }}</h5>
                 </div>
-                <div class="card card-body" style="width: 45vh;object-fit: initial;height: 35vh;margin: auto;background-color:#1C2333">
-                    <video class="embed-responsive embed-responsive-16by9" controls="controls" style="width: 40vh;object-fit: initial;height: 35vh">
+                <div class="card card-body" style=";object-fit: cover;height: 35vh;background-color:#1C2333">
+                    <video class="embed-responsive embed-responsive-16by9" controls="controls" style="width: 100%;object-fit: cover;height: 35vh">
                         <source src="{{ video.video.url }}" type="video/mp4" />
                     </video>
 
@@ -57,7 +70,9 @@
                 <div class="card card-footer text-center" style="background-color: #1C2333;color: #B0B3B9">
                     <h5 class="card-comment">{{ video.course.name }}</h5>
                 </div>
-              </div>
+
+
+            </div>
 
             </div>
 
@@ -66,6 +81,44 @@
 
         {% endfor %}
     </div>
+
+    <script>
+        function onFormSubmit(event) {
+        event.preventDefault();
+
+        var formData=new FormData();
+        formData.append("course",document.getElementById("course").value);
+        formData.append("title",document.getElementById("titre").value);
+        formData.append("file",document.getElementById("file").files[0]);
+
+        console.log(formData);
+        var total = 0
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","{% url 'teacher-video' %}",true);
+        xhr.upload.addEventListener("progress",function (ev) {
+           if(ev.lengthComputable){
+                 var percentage=(ev.loaded/ev.total*100|0);
+               document.getElementById("progress-wrapper").style["display"]="block";
+               document.getElementById("progress").style["width"]=""+percentage+"%";
+               document.getElementById("progress").innerHTML=""+percentage+"%";
+               document.getElementById("progress_status").innerHTML="Uploaded : "+parseInt(ev.loaded/1000000)+"/"+parseInt(ev.total/1000000)+" MB";
+               console.log("Uploaded : "+ev.loaded);
+               console.log("TOTAL : "+ev.total);
+
+               console.log(percentage)
+               total =percentage
+               if(total === 100){
+             window.location = "{% url 'teacher-video' %}";
+
+        }
+           }
+        });
+        var csrf_token = "{{ csrf_token }}"
+        xhr.setRequestHeader('X-CSRFToken', csrf_token)
+        xhr.send(formData);
+
+        }
+    </script>
 
 
 {% endblock %}

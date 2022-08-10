@@ -4,7 +4,7 @@
 {% block content %}
     {% include 'school/message.html' %}
     <h1 class="text-center" style="color: #6B97FA">Videos</h1>
-    <div class="col col-md-2 text-light" style="background-color: #1C2333">
+    <div class="col col-lg-3 text-light" style="background-color: #1C2333">
         <h3 class="text-center">cours</h3>
         <ul class="list-group text-light text-center">
             {% for course in courses %}
@@ -12,16 +12,15 @@
             {% endfor %}
           </ul>
     </div>
-    <div class="col col-md-9">
-    <div class="row col-md-12">
+
+    <div class="row col-md-9">
         {% for video in videos %}
-            <div class="col-lg-4 mt-3 mx-3" style="margin-bottom: 20px;height: 55vh">
-              <div class="card shadow text-light" style="background-color: #1C2333;width: 45vh;height: 55vh">
+              <div class="card shadow text-light mx-3 mt-3" style="background-color: #1C2333;width: 45vh;height: 60vh;">
                 <div class="card-header" style="background-color: #1C2333">
                     <h5 class="card-title text-center" style="">{{ video.title }}</h5>
                 </div>
-                <div class="card card-body" style="width: 45vh;object-fit: initial;height: 35vh;margin: auto;background-color:#1C2333">
-                    <video class="embed-responsive embed-responsive-16by9" controls="controls" style="width: 40vh;object-fit: initial;height: 35vh">
+                <div class="card card-body" style=";object-fit: cover;height: 35vh;background-color:#1C2333">
+                    <video class="embed-responsive embed-responsive-16by9" controls="controls" style="width: 100%;object-fit: cover;height: 35vh">
                         <source src="{{ video.video.url }}" type="video/mp4" />
                     </video>
 
@@ -30,7 +29,7 @@
                 <div class="card card-footer text-center" style="background-color: #1C2333;color: #B0B3B9">
                     <h5 class="card-comment">{{ video.course.name }}</h5>
                 </div>
-              </div>
+
 
             </div>
 
@@ -39,7 +38,7 @@
 
         {% endfor %}
     </div>
-    </div>
+
 
 
 {% endblock %}
